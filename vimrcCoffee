@@ -1,0 +1,43 @@
+"NeoBundleで開発するときのcoffescript用のvim設定ファイル。
+"NeoBundleのインストール方法
+"https://github.com/Shougo/neobundle.vim
+
+set nocompatible               " Be iMproved
+
+if has('vim_starting')
+        set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+"非同期処理ツール
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'windows' : 'make -f make_mingw32.mak',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+" syntax + 自動compile
+ NeoBundle 'kchmck/vim-coffee-script'
+" " js BDDツール
+ NeoBundle 'claco/jasmine.vim'
+" " indentの深さに色を付ける
+ NeoBundle 'nathanaelkane/vim-indent-guides'
+
+
+call neobundle#end()
+
+au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
+
+autocmd FileType coffee     setlocal sw=2 sts=2 ts=2 et
+
+"autocompile
+autocmd BufWritePost *.coffee silent make!
+
+autocmd QuickFixCmdPost * nested cwindow | redraw!
+
+filetype plugin indent on
